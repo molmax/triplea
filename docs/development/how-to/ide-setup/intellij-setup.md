@@ -27,7 +27,7 @@ Plugin installation can be initiated from the JetBrains Marketplace web page, by
         1. after install finish configuration in: **Other Settings > Checkstyle**
             1. load checkstyle file by clicking on the "plus" and navigating to the file
             `.\IdeaProjects\triplea\config\checkstyle` (If you can't find it, you can download it from 
-             [the repository](https://github.com/triplea-game/triplea/blob/master/config/checkstyle/checkstyle.xml))
+             [the repository](https://github.com/triplea-game/triplea/blob/master/.build/checkstyle.xml))
             1. set checkstyle version
             1. set to scan all sources
       ![Screenshot from 2020-10-18 19-18-46
@@ -39,8 +39,21 @@ Plugin installation can be initiated from the JetBrains Marketplace web page, by
   1. *PlantUML Integration*
         1. GraphViz also needs to be installed: <https://graphviz.org/download/>
 
-### Settings
-  1. *File > Import Settings*
-  1. Select file: [.ide-intellij/intellij-settings.zip
-   ](https://github.com/triplea-game/triplea/blob/master/.ide-intellij/intellij-settings.zip)
+
+## Google Java Format Plugin Fix
+
+Find your IDEA vmoptions file with: `find ~ -name "*vmoptions"`
+(eg: ./.config/JetBrains/IntelliJIdea2022.3/idea64.vmoptions)
+
+Add the following to your vmoptions file:
+
+```
+--add-opens=java.base/java.lang=ALL-UNNAMED
+--add-opens=java.base/java.util=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+```
 

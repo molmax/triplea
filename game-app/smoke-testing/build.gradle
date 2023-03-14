@@ -1,0 +1,43 @@
+plugins {
+    id 'de.undercouch.download' version '5.3.1'
+}
+
+dependencies {
+    implementation project(':game-app:domain-data')
+    implementation project(':game-app:game-core')
+    testImplementation project(':game-app:game-headless')
+    testImplementation project(':lib:java-extras')
+    testImplementation project(':lib:test-common')
+    testImplementation "org.sonatype.goodies:goodies-prefs:$sonatypeGoodiesPrefsVersion"
+}
+
+test {
+    // AiGameTest is memory intensive due to ConcurrentBattleCalculator threads deserializing GameData concurrently.
+    maxHeapSize = "2G"
+}
+
+tasks.test.dependsOn("downloadSaveGames")
+
+task downloadSaveGames {
+    doLast {
+        mkdir "$projectDir/src/test/resources/save-games/"
+
+        def urls = []
+        file('save-game-list.txt').eachLine { path ->
+            if (!path.startsWith('#')) {
+                urls.add(path)
+            }
+        }
+
+        // Use a single download.run invocation to download in parallel.
+        download.run {
+            src(urls)
+            dest "$projectDir/src/test/resources/save-games/"
+            overwrite false
+        }
+    }
+}
+
+clean.doFirst {
+    delete "$projectDir/src/test/resources/save-games/"
+}
